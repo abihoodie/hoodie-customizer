@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8" />
+  <title style="font-size: 0.9em;">Abi Hoodie Farbauswahl</title>
+  <style>
+    body {
+      margin: 0;
+      background: #f0f0f0;
+      font-family: sans-serif;
+      height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      user-select: none;
+    }
+
+    #wrapper {
+      position: relative;
+      width: 90%;
+      max-width: 600px; /* 2x larger than original (300px) */
+      aspect-ratio: 4 / 5;
+      background: white;
+      box-shadow: 0 0 12px rgba(0,0,0,0.15);
+    }
+
+    #hoodie {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      top: 0;
+      left: 0;
+      object-fit: contain;
+      pointer-events: none;
+    }
+
+    /* Adjusted size and position for realistic right chest print */
+    #schrift {
+    position: absolute;
+    width: 13%;
+    top: 35%;   /* was 24% — moved down slightly */
+    left: 55%;  /* was 58% — moved more toward center */
+    object-fit: contain;
+    pointer-events: none;
+
+    }
+
+    /* Hoodie navigation buttons */
+    #hoodie-left, #hoodie-right {
+      position: absolute;
+      top: 30%;
+      font-size: 2rem;
+      background: transparent;
+      border: none;
+      cursor: pointer;
+      color: #444;
+      user-select: none;
+      padding: 8px 12px;
+      transition: color 0.2s;
+    }
+    #hoodie-left { left: -50px; }
+    #hoodie-right { right: -50px; }
+    #hoodie-left:hover, #hoodie-right:hover { color: #000; }
+
+    /* Schrift navigation buttons */
+    #schrift-left, #schrift-right {
+      position: absolute;
+      top: 70%;
+      font-size: 2rem;
+      background: transparent;
+      border: none;
+      cursor: pointer;
+      color: #444;
+      user-select: none;
+      padding: 8px 12px;
+      transition: color 0.2s;
+    }
+    #schrift-left { left: -50px; }
+    #schrift-right { right: -50px; }
+    #schrift-left:hover, #schrift-right:hover { color: #000; }
+
+    #info {
+      position: absolute;
+      bottom: 10px;
+      right: 10px;
+      font-size: 0.9rem;
+      color: #888;
+    }
+  </style>
+</head>
+<body>
+
+<div id="wrapper">
+  <img id="hoodie" src="farben_hoodies_20250606234414.png" alt="Hoodie" />
+  <img id="schrift" src="IMG_2184.png" alt="Schrift" />
+
+  <!-- Hoodie Navigation -->
+  <button id="hoodie-left" onclick="prevHoodie()" title="Vorheriger Hoodie">⬅️</button>
+  <button id="hoodie-right" onclick="nextHoodie()" title="Nächster Hoodie">➡️</button>
+
+  <!-- Schrift Navigation -->
+  <button id="schrift-left" onclick="prevSchrift()" title="Vorherige Schrift">⬅️</button>
+  <button id="schrift-right" onclick="nextSchrift()" title="Nächste Schrift">➡️</button>
+
+  <!-- Info -->
+  <div id="info"></div>
+</div>
+
+<script>
+  const hoodies = [
+    "farben_hoodies_20250606234414.png",
+    "farben_hoodies_20250606234417.png",
+    "farben_hoodies_20250606234421.png",
+    "farben_hoodies_20250606234426.png",
+    "farben_hoodies_20250606234430.png",
+    "farben_hoodies_20250606234435.png",
+    "farben_hoodies_20250606234439.png",
+    "farben_hoodies_20250606234444.png",
+    "farben_hoodies_20250606234449.png",
+    "farben_hoodies_20250606234454.png",
+    "farben_hoodies_20250606234458.png",
+    "farben_hoodies_20250606234503.png",
+    "farben_hoodies_20250606234508.png",
+    "farben_hoodies_20250606234514.png",
+    "farben_hoodies_20250606234518.png",
+    "farben_hoodies_20250606234548.png",
+    "farben_hoodies_20250606234552.png",
+    "farben_hoodies_20250606234556.png",
+    "farben_hoodies_20250606234605.png",
+    "farben_hoodies_20250606234610.png",
+    "farben_hoodies_20250606234615.png",
+    "farben_hoodies_20250606234620.png",
+    "farben_hoodies_20250606234625.png",
+    "farben_hoodies_20250606234629.png",
+    "farben_hoodies_20250606234634.png",
+    "farben_hoodies_20250606234645.png",
+    "farben_hoodies_20250606234652.png",
+    "farben_hoodies_20250606234656.png",
+    "farben_hoodies_20250606234701.png",
+    "farben_hoodies_20250606234726.png",
+    "farben_hoodies_20250606234736.png",
+    "farben_hoodies_20250606234740.png",
+    "farben_hoodies_20250606234749.png"
+  ];
+
+  const schriften = [
+    "IMG_2184.png",
+    "IMG_2210.png",
+    "Schriftfarben_20250606230900.png",
+    "Schriftfarben_20250606230921.png",
+    "Schriftfarben_20250606230934.png",
+    "Schriftfarben_20250606230939.png",
+    "Schriftfarben_20250606230943.png",
+    "Schriftfarben_20250606230954.png",
+    "Schriftfarben_20250606230958.png",
+    "Schriftfarben_20250606231002.png",
+    "Schriftfarben_20250606231013.png",
+    "Schriftfarben_20250606231017.png",
+    "Schriftfarben_20250606231021.png",
+    "Schriftfarben_20250606231025.png",
+    "Schriftfarben_20250606231028.png",
+    "Schriftfarben_20250606231033.png",
+    "Schriftfarben_20250606231044.png",
+    "Schriftfarben_20250606231047.png",
+    "Schriftfarben_20250606231052.png",
+    "Schriftfarben_20250606231055.png",
+    "Schriftfarben_20250606231058.png",
+    "Schriftfarben_20250606231102.png",
+    "Schriftfarben_20250606231228.png",
+    "Schriftfarben_20250606231232.png",
+    "Schriftfarben_20250606231235.png",
+    "Schriftfarben_20250606231241.png",
+    "Schriftfarben_20250606231244.png",
+    "Schriftfarben_20250606231248.png",
+    "Schriftfarben_20250606231256.png",
+    "Schriftfarben_20250606231259.png",
+    "Schriftfarben_20250606231304.png",
+    "Schriftfarben_20250606231314.png",
+    "Schriftfarben_20250606231318.png"
+  ];
+
+  let hoodieIndex = 0;
+  let schriftIndex = 0;
+
+  function update() {
+    document.getElementById("hoodie").src = hoodies[hoodieIndex];
+    document.getElementById("schrift").src = schriften[schriftIndex];
+    document.getElementById("info").textContent =
+      `Hoodie ${hoodieIndex + 1}/${hoodies.length}, Schrift ${schriftIndex + 1}/${schriften.length}`;
+  }
+
+  function nextHoodie() {
+    hoodieIndex = (hoodieIndex + 1) % hoodies.length;
+    update();
+  }
+
+  function prevHoodie() {
+    hoodieIndex = (hoodieIndex - 1 + hoodies.length) % hoodies.length;
+    update();
+  }
+
+  function nextSchrift() {
+    schriftIndex = (schriftIndex + 1) % schriften.length;
+    update();
+  }
+
+  function prevSchrift() {
+    schriftIndex = (schriftIndex - 1 + schriften.length) % schriften.length;
+    update();
+  }
+
+  function preload(srcArray) {
+    srcArray.forEach(src => {
+      const img = new Image();
+      img.src = src;
+    });
+  }
+  preload(hoodies);
+  preload(schriften);
+
+  document.addEventListener("keydown", (e) => {
+    switch (e.key) {
+      case "ArrowLeft": prevHoodie(); break;
+      case "ArrowRight": nextHoodie(); break;
+      case "ArrowUp": prevSchrift(); break;
+      case "ArrowDown": nextSchrift(); break;
+    }
+  });
+
+  update();
+</script>
+
+</body>
+</html>
